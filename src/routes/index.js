@@ -14,6 +14,6 @@ forwardRouter.get("/todos", getAllTodos);
 forwardRouter.put("/todos/:id", updateTodoById);
 forwardRouter.delete("/todos/:id", deleteTodoById);
 forwardRouter.get("/todos/:id", getTodoById);
-forwardRouter.get("/todos/random", getRandomTodo);
+forwardRouter.post("/todos/random", getRandomTodo);
 
 export default forwardRouter;

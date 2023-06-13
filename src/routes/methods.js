@@ -66,10 +66,9 @@ export async function getTodoById(req, res) {
   }
 }
 
-export async function getRandomTodo(req, res){
-  const responseJson = await fetch("https://www.boredapi.com/api/activity")
-                              .then(apiResponse => apiResponse.json());
-  if (responseJson){
+export async function getRandomTodo(_req, res){
+  try { 
+    const responseJson = await fetch("https://www.boredapi.com/api/activity").then(apiResponse => apiResponse.json());
     const randomActivity = responseJson.activity;
     const newTodo = {
       id: v4(),
@@ -78,7 +77,7 @@ export async function getRandomTodo(req, res){
     };
     todoList[newTodo.id] = newTodo;
     return res.status(200).json(newTodo); 
-  } else {
+  } catch (e) {
     return badRequest(res, "Generator not replying");
-  }                       
-}
+  }
+}    
