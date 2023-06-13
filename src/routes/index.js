@@ -2,15 +2,18 @@ import { Router } from "express";
 import {
     createTodo,
     getAllTodos,
-    deleteTodoById
+    deleteTodoById,
+    updateTodoById,
+    getTodoById,
+    getRandomTodo
 } from "./methods.js";
-import { updateTodoById, getTodoById } from "./newMethods";
 
 const forwardRouter = Router();
 forwardRouter.post("/todos", createTodo);
 forwardRouter.get("/todos", getAllTodos);
 forwardRouter.put("/todos/:id", updateTodoById);
 forwardRouter.delete("/todos/:id", deleteTodoById);
-forwardRouter.get("/todo/:id", getTodoById);
+forwardRouter.get("/todos/:id", getTodoById);
+forwardRouter.get("/todos/random", getRandomTodo);
 
 export default forwardRouter;

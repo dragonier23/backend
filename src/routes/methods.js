@@ -3,6 +3,12 @@ import fetch from "node-fetch";
 
 // This is not exported, which means only methods exposed in this file will access it.
 export const todoList = {};
+const errorMessage = { message: "UUID does not exist" };
+
+//alternative function to return eroror meesage
+function badRequest(res, message) {
+  return res.status(400).json({ message });
+}
 
 export async function createTodo(req, res) {
   const body = req.body;
@@ -29,7 +35,7 @@ export async function deleteTodoById(req, res) {
   const entryToDelete = todoList[id];
 
   if (!entryToDelete) {
-    return res.status(400).json({ message: "UUID does not exist" });
+    return res.status(400).json(errorMessage);
   }
 
   if (entryToDelete.description === "Improve backend") {
@@ -38,4 +44,41 @@ export async function deleteTodoById(req, res) {
 
   delete todoList[id];
   return res.status(200).json();
+}
+
+export async function updateTodoById(req, res) {
+  const { id } = req.params;
+  const TodoInfo = req.body;
+  if (id in todoList){
+    todoList[id] = {...todoList[id], ...TodoInfo}
+    return res.status(200).send();
+  } else {
+    return res.status(400).json(errorMessage);
+  }
+}
+
+export async function getTodoById(req, res) {
+  const { id } = req.params;
+  if (id in todoList){
+    return res.status(200).json(todoList[id]);
+  } else {
+    return badRequest(res, "UUID does not exist");
+  }
+}
+
+export async function getRandomTodo(req, res){
+  const responseJson = await fetch("https://www.boredapi.com/api/activity")
+                              .then(apiResponse => apiResponse.json());
+  if (responseJson){
+    const randomActivity = responseJson.activity;
+    const newTodo = {
+      id: v4(),
+      description: randomActivity,
+      done: false,
+    };
+    todoList[newTodo.id] = newTodo;
+    return res.status(200).json(newTodo); 
+  } else {
+    return badRequest(res, "Generator not replying");
+  }                       
 }
