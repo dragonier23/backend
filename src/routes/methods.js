@@ -33,7 +33,7 @@ export async function getAllTodos(_req, res) {
 export async function deleteTodoById(req, res) {
   const { id } = req.params;
   const entryToDelete = todoList[id];
-  //const blocked = ["Improve backend"];
+  const blocked = ["Improve backend"];
   if (id in todoList){
     for (id in blocked){
       if (blocked[id] === entryToDelete.description){
