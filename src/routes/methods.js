@@ -35,8 +35,8 @@ export async function deleteTodoById(req, res) {
   const entryToDelete = todoList[id];
   const blocked = ["Improve backend"];
   if (id in todoList){
-    for (id in blocked){
-      if (blocked[id] === entryToDelete.description){
+    for (var i = 0; i < blocked.length; i++){
+      if (blocked[i] === entryToDelete.description){
         return res.status(405).json({ message : "This todo cannot be deleted"});
       }
     }
