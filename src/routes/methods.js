@@ -33,23 +33,23 @@ export async function getAllTodos(_req, res) {
 export async function deleteTodoById(req, res) {
   const { id } = req.params;
   const entryToDelete = todoList[id];
-
-  if (!entryToDelete) {
-    return res.status(400).json(errorMessage);
+  const blocked = ["Improve backend"];
+  if (id in todoList){
+    if (entryToDelete.description in blocked){
+      return res.status(405).json({ message : "This todo cannot be deleted"})
+    }
+    delete todoList[id];
+    return res.status(200).json();
   }
-
-  if (entryToDelete.description === "Improve backend") {
-    return res.status(405).json(messageJson("This todo cannot be deleted"));
-  }
-
-  delete todoList[id];
-  return res.status(200).json();
+  return res.status(400).json(errorMessage);
 }
 
 export async function updateTodoById(req, res) {
   const { id } = req.params;
   const TodoInfo = req.body;
-  if (id in todoList){
+  if (id !== TodoInfo.id){
+    return res.status(409).json({message : "UUID in path and body do not match"});
+  } else if (id in todoList){
     todoList[id] = {...todoList[id], ...TodoInfo}
     return res.status(200).send();
   } else {
